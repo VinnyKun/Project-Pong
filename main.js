@@ -1,7 +1,11 @@
 //global variables 
 
-//player paddle object
+//player keeper object
 var playerKeeper = {
+
+	x:0,
+
+	y:0,
 	
 	width: 20,	
 
@@ -10,7 +14,7 @@ var playerKeeper = {
 }
 
 
-//AI paddle object
+//AI keeper object
 
 var aiKeeper = {
 	
@@ -46,12 +50,34 @@ window.onload = function () {
 	//this gives 2D rendering context for the canvas
 	canvasContext = canvas.getContext('2d')
 
+	
 	//frames per second(fps
 	var fps = 30;
+	
 	setInterval(function () {
     gameMovement();
     gameParts();
 	}, 1000/fps);
+	
+	
+	
+	//event listener to control paddle
+	canvas.addEventListener('mousemove', function(event){
+		
+		//variable containing the area of the canvas
+		var rect = canvas.getBoundingClientRect();
+		
+		//variable of the whole body
+		var wholeBody = document.documentElement;
+		
+		// this returns the postion of mouse in the Y-axis
+		//regardless of the position of the of canvas relative to body/scroll 
+		var mouseYPosition = event.clientY - rect.top - wholeBody.scrollTop;
+
+		//this attaches the mouse's y coordinates to keeper's centre
+		playerKeeper.y = mouseYPosition - playerKeeper.height/2
+
+	})
 
 
 
@@ -63,6 +89,12 @@ var gameMovement = function() {
 	console.log(ball.x)
 	if (ball.x == canvas.width || ball.x == 0) {
 	ball.speedXAxis = -ball.speedXAxis
+	}
+
+	ball.y += ball.speedYAxis;
+	console.log(ball.y)
+	if (ball.y == canvas.height || ball.y == 0) {
+	ball.speedYAxis = -ball.speedYAxis
 	}
 }
 
@@ -85,7 +117,7 @@ var gameParts = function () {
 	canvasContext.fillStyle = ('black');
 
 	//x,y,width,height: position halfway down y, fillRect draws a rectangle
-	canvasContext.fillRect(0, canvas.height/2, playerKeeper.width, playerKeeper.height) 
+	canvasContext.fillRect(playerKeeper.x, playerKeeper.y, playerKeeper.width, playerKeeper.height) 
 	
 	//the AI keeper rectangle is coloured:
 	canvasContext.fillStyle = ('yellow');
@@ -117,6 +149,8 @@ var gameParts = function () {
 	console.log('ball in play') 
 
 }
+
+
 
 
 
