@@ -1,4 +1,6 @@
 //global variables 
+var canvas;
+var canvasContext;
 
 //player keeper object
 var playerKeeper = {
@@ -7,7 +9,7 @@ var playerKeeper = {
 
 	y:0,
 	
-	width: 20,	
+	width: 10,	
 
 	height:80,
 	
@@ -17,30 +19,32 @@ var playerKeeper = {
 //AI keeper object
 
 var aiKeeper = {
+
+	x: 590,
+
+	y: 200,
 	
-	width: 20,
+	width: 10,
 
 	height:100,
 	
 }
 
-//AI paddle object
+//ball
 
  var ball = {
 
- 	x: 100,
+ 	x: 300,
 
-	y: 150,
+	y: 200,
 	
- 	speedXAxis: 5 ,
+ 	speedXAxis: 15,
 
  	speedYAxis: 5,
 	
  }
 
 
-var canvas;
-var canvasContext;
 
 window.onload = function () {
 
@@ -51,13 +55,13 @@ window.onload = function () {
 	canvasContext = canvas.getContext('2d')
 
 	
-	//frames per second(fps
-	var fps = 30;
+
 	
 	setInterval(function () {
-    gameMovement();
+    aiMovement();	
+    ballMovement();
     gameParts();
-	}, 1000/fps);
+	}, 33);
 	
 	
 	
@@ -83,14 +87,44 @@ window.onload = function () {
 
 }
 
-var gameMovement = function() {
+var aiMovement = function () {
+	if ((aiKeeper.y + aiKeeper.height)/2 < ball.y) {
+		aiKeeper.y += 7;
+		console.log('y' + aiKeeper.y);
+	} else {
+		aiKeeper.y -= 15;
+	}
+
+};
+
+var ballMovement = function() {
+	
+	
 	//movement
 	ball.x += ball.speedXAxis;
 	console.log(ball.x)
-	if (ball.x == canvas.width || ball.x == 0) {
+	if (ball.x == canvas.width) {
 	ball.speedXAxis = -ball.speedXAxis
 	}
 
+	// ball reset upon conceding
+	if (ball.x < 0) {
+
+		if (ball.y > playerKeeper.y && ball.y < playerKeeper.y + playerKeeper.height) {
+
+			//collision resulting opposite x axis
+			ball.speedXAxis = -ball.speedXAxis
+		}
+
+		else {
+		ball.speedXAxis = -ball.speedXAxis
+		ball.x = canvas.width/2;
+		ball.y = canvas.height/2;
+		console.log('Goal!')
+		}	
+	}
+
+	// bounces when ball hit the top of the canvas
 	ball.y += ball.speedYAxis;
 	console.log(ball.y)
 	if (ball.y == canvas.height || ball.y == 0) {
@@ -120,10 +154,10 @@ var gameParts = function () {
 	canvasContext.fillRect(playerKeeper.x, playerKeeper.y, playerKeeper.width, playerKeeper.height) 
 	
 	//the AI keeper rectangle is coloured:
-	canvasContext.fillStyle = ('yellow');
+	canvasContext.fillStyle = ('black');
 
 	//x,y,width,height: cover entire canvas, fillRect draws a rectangle
-	canvasContext.fillRect(canvas.width - aiKeeper.width, canvas.height/2, aiKeeper.width, aiKeeper.height)
+	canvasContext.fillRect(aiKeeper.x, aiKeeper.y, aiKeeper.width, aiKeeper.height)
 
 	//to ensure function is working
 	console.log('Keepers Ready!') 
