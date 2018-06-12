@@ -1,7 +1,7 @@
 //global variables 
 
 //player paddle object
-var playerPaddle = {
+var playerKeeper = {
 	
 	width: 20,	
 
@@ -12,7 +12,7 @@ var playerPaddle = {
 
 //AI paddle object
 
-var aiPaddle = {
+var aiKeeper = {
 	
 	width: 20,
 
@@ -22,17 +22,17 @@ var aiPaddle = {
 
 //AI paddle object
 
-// var ball = {
+ var ball = {
 
-// 	xCoordinate:;
+ 	x: 100,
 
-// 	yCoordinate:;
+	y: 150,
 	
-// 	speedY: ,
+ 	speedXAxis: 5 ,
 
-// 	speedX:,
+ 	speedYAxis: 5,
 	
-// }
+ }
 
 
 var canvas;
@@ -46,46 +46,78 @@ window.onload = function () {
 	//this gives 2D rendering context for the canvas
 	canvasContext = canvas.getContext('2d')
 
-	//the canvas/'field' is coloured green
-	canvasContext.fillStyle = ('green');
+	//frames per second(fps
+	var fps = 30;
+	setInterval(function () {
+    gameMovement();
+    gameParts();
+	}, 1000/fps);
 
-	paddles();
-	ball();
+
 
 }
 
-var paddles = function () {
+var gameMovement = function() {
+	//movement
+	ball.x += ball.speedXAxis;
+	console.log(ball.x)
+	if (ball.x == canvas.width || ball.x == 0) {
+	ball.speedXAxis = -ball.speedXAxis
+	}
+}
+
+
+
+var gameParts = function () {
+
+	//the canvas/'field' is coloured green
+	canvasContext.fillStyle = ('green');
 
 	//x,y,width,height: cover entire canvas, fillRect draws a rectangle
 	canvasContext.fillRect(0, 0, canvas.width, canvas.height) 
 
-	//the player paddle rectangle is coloured white
+	console.log('field is ready!')
+
+
+
+
+	//the player keeper rectangle is coloured white
 	canvasContext.fillStyle = ('black');
 
 	//x,y,width,height: position halfway down y, fillRect draws a rectangle
-	canvasContext.fillRect(0, canvas.height/2, playerPaddle.width, playerPaddle.height) 
-
-	//the AI paddle rectangle is coloured:
+	canvasContext.fillRect(0, canvas.height/2, playerKeeper.width, playerKeeper.height) 
+	
+	//the AI keeper rectangle is coloured:
 	canvasContext.fillStyle = ('yellow');
 
 	//x,y,width,height: cover entire canvas, fillRect draws a rectangle
-	canvasContext.fillRect(580, canvas.height/2, aiPaddle.width, aiPaddle.height)
+	canvasContext.fillRect(canvas.width - aiKeeper.width, canvas.height/2, aiKeeper.width, aiKeeper.height)
 
-	console.log('paddles up!') 
+	//to ensure function is working
+	console.log('Keepers Ready!') 
 
-}
 
-var ball = function () {
 
+
+	
 	//the ball is coloured:
-	canvasContext.fillStyle = ('white')
+	canvasContext.fillStyle = ('black')
 
-	//x,y,width,height: ball position and size
-	canvasContext.fillRect(300, 150, 10, 10)
+	//no arcfill so this helps fill colour
+	canvasContext.beginPath();
+	
+	//(x,y,radius,angle, radians: ball position and size.
+	// ball center coordinates accessed from its object
+	canvasContext.arc(ball.x, ball.y, 10, 0, Math.PI * 2, true)
 
+	////no arcfill so this helps fill colour
+	canvasContext.fill();
+
+	// to ensure that function is working
 	console.log('ball in play') 
 
-
 }
+
+
 
 
