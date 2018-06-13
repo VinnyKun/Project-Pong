@@ -26,7 +26,7 @@ var aiKeeper = {
 	
 	width: 10,
 
-	height:100,
+	height:100, 
 	
 }
 
@@ -38,7 +38,7 @@ var aiKeeper = {
 
 	y: 200,
 	
- 	speedXAxis: 15,
+ 	speedXAxis: 10,
 
  	speedYAxis: 5,
 	
@@ -88,11 +88,21 @@ window.onload = function () {
 }
 
 var aiMovement = function () {
-	if ((aiKeeper.y + aiKeeper.height)/2 < ball.y) {
+
+	var aiCentre = (aiKeeper.y + aiKeeper.height)/2
+	var aiThird = (aiKeeper.y + aiKeeper.height)/3
+	var aiThird = (aiKeeper.y + aiKeeper.height)/3
+	var aiQuarter = (aiKeeper.y + aiKeeper.height)/5
+
+	//to make the ai's centre be point of reference relative to the ball
+	if (aiCentre + aiThird < ball.y) {
 		aiKeeper.y += 7;
-		console.log('y' + aiKeeper.y);
-	} else {
-		aiKeeper.y -= 15;
+		
+		//just to track the keeper
+		console.log('imHere' + aiKeeper.y);
+	
+	} else if (aiCentre + aiThird > ball.y) {
+		aiKeeper.y -= 7;
 	}
 
 };
@@ -110,13 +120,14 @@ var ballMovement = function() {
 	// ball reset upon conceding
 	if (ball.x < 0) {
 
-		if (ball.y > playerKeeper.y && ball.y < playerKeeper.y + playerKeeper.height) {
+		if (ball.y > playerKeeper.y && ball.y < (playerKeeper.y + playerKeeper.height)) {
 
 			//collision resulting opposite x axis
 			ball.speedXAxis = -ball.speedXAxis
 		}
 
 		else {
+		// ball reset upon conceding	
 		ball.speedXAxis = -ball.speedXAxis
 		ball.x = canvas.width/2;
 		ball.y = canvas.height/2;
