@@ -12,6 +12,8 @@ var playerKeeper = {
 	width: 10,	
 
 	height:80,
+
+	score: 0,
 	
 }
 
@@ -26,7 +28,9 @@ var aiKeeper = {
 	
 	width: 10,
 
-	height:100, 
+	height:80, 
+
+	score: 0,
 	
 }
 
@@ -38,7 +42,7 @@ var aiKeeper = {
 
 	y: 200,
 	
- 	speedXAxis: 10,
+ 	speedXAxis: 8,
 
  	speedYAxis: 5,
 	
@@ -61,7 +65,7 @@ window.onload = function () {
     aiMovement();	
     ballMovement();
     gameParts();
-	}, 33);
+	}, 25);
 	
 	
 	
@@ -91,18 +95,18 @@ var aiMovement = function () {
 
 	var aiCentre = (aiKeeper.y + aiKeeper.height)/2
 	var aiThird = (aiKeeper.y + aiKeeper.height)/3
-	var aiThird = (aiKeeper.y + aiKeeper.height)/3
-	var aiQuarter = (aiKeeper.y + aiKeeper.height)/5
+	var aiQuarter = (aiKeeper.y + aiKeeper.height)/4
+	var aiFifth = (aiKeeper.y + aiKeeper.height)/5
 
 	//to make the ai's centre be point of reference relative to the ball
-	if (aiCentre + aiThird < ball.y) {
-		aiKeeper.y += 7;
+	if (aiCentre + aiQuarter < ball.y) {
+		aiKeeper.y += 5;
 		
 		//just to track the keeper
 		console.log('imHere' + aiKeeper.y);
 	
-	} else if (aiCentre + aiThird > ball.y) {
-		aiKeeper.y -= 7;
+	} else if (aiCentre + aiQuarter > ball.y) {
+		aiKeeper.y -= 5;
 	}
 
 };
@@ -110,35 +114,72 @@ var aiMovement = function () {
 var ballMovement = function() {
 	
 	
-	//movement
+	//basic movement in the x axis
 	ball.x += ball.speedXAxis;
 	console.log(ball.x)
-	if (ball.x == canvas.width) {
-	ball.speedXAxis = -ball.speedXAxis
-	}
 
-	// ball reset upon conceding
-	if (ball.x < 0) {
 
-		if (ball.y > playerKeeper.y && ball.y < (playerKeeper.y + playerKeeper.height)) {
+	//ball to ai game occurences
+	if (ball.x > canvas.width) {
+
+		//if ball collides within the ai keeper
+		if (ball.y >= aiKeeper.y && ball.y <= (aiKeeper.y + aiKeeper.height)) {
 
 			//collision resulting opposite x axis
 			ball.speedXAxis = -ball.speedXAxis
+
+			//collision in y axis based on which part of the keeper is hit
+			var differenceY = ball.y - (aiKeeper.y + aiKeeper.height/2);
+			console.log('difference y:'+ differenceY);
+			// ball.speedYAxis = differenceY/3;
 		}
 
-		else {
-		// ball reset upon conceding	
+	else {
+		// if not the player concedes and ball reset in center upon conceding
 		ball.speedXAxis = -ball.speedXAxis
 		ball.x = canvas.width/2;
 		ball.y = canvas.height/2;
-		console.log('Goal!')
+		playerKeeper.score += 1
+		var playerScore = document.querySelector('#player')
+		playerScore.innerHTML = playerKeeper.score
+		console.log("playerKeeperScore:" + playerKeeper.score)
+
+	}	
+	
+	}
+
+	// ball to player game occurences
+	if (ball.x < 0) {
+
+		//if ball collides within the player keeper
+		if (ball.y >= playerKeeper.y && ball.y <= (playerKeeper.y + playerKeeper.height)) {
+
+			//collision resulting opposite x axis
+			ball.speedXAxis = -ball.speedXAxis
+
+			//collision in y axis based on which part of the keeper is hit
+			var differenceY = ball.y - (playerKeeper.y + playerKeeper.height/2);
+			//ball.speedYAxis = differenceY/40;
+		}
+
+	else {
+
+		// if not the player concedes and ball reset in center upon conceding	
+		ball.speedXAxis = -ball.speedXAxis
+		ball.x = canvas.width/2;
+		ball.y = canvas.height/2;
+		//the ai's score is updated 
+		aiKeeper.score += 1
+		var aiScore = document.querySelector('#ai')
+		aiScore.innerHTML = aiKeeper.score
+		console.log("aiKeeperScore:" + aiKeeper.score)
 		}	
 	}
 
 	// bounces when ball hit the top of the canvas
 	ball.y += ball.speedYAxis;
 	console.log(ball.y)
-	if (ball.y == canvas.height || ball.y == 0) {
+	if (ball.y === canvas.height || ball.y === 0) {
 	ball.speedYAxis = -ball.speedYAxis
 	}
 }

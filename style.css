@@ -11,11 +11,31 @@ canvas {
 h1 {
 
 	color: white;
-	font-family: 'Orbitron', sans-serif;;
+	font-family: 'Orbitron', sans-serif;
 	text-align: center;
 }
 
 body{
 
 	background-color: black;
+}
+
+.scoreboard {
+	color: white;
+	font-family: 'Orbitron', sans-serif;
+	text-align: center;
+	margin-bottom: 20px;
+	font-size: 25px
+}
+
+#player {
+	text-align: left;
+	margin-right: 150px
+
+}
+
+#ai {
+	text-align: right;
+	margin-left: 150px
+
 }
