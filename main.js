@@ -65,7 +65,7 @@ window.onload = function () {
     aiMovement();	
     ballMovement();
     gameParts();
-	}, 25);
+	}, 20);
 	
 	
 	
@@ -99,14 +99,14 @@ var aiMovement = function () {
 	var aiFifth = (aiKeeper.y + aiKeeper.height)/5
 
 	//to make the ai's centre be point of reference relative to the ball
-	if (aiCentre + aiQuarter < ball.y) {
-		aiKeeper.y += 5;
+	if (aiCentre + aiThird < ball.y) {
+		aiKeeper.y += 7;
 		
 		//just to track the keeper
 		console.log('imHere' + aiKeeper.y);
 	
-	} else if (aiCentre + aiQuarter > ball.y) {
-		aiKeeper.y -= 5;
+	} else if (aiCentre + aiThird > ball.y) {
+		aiKeeper.y -= 7;
 	}
 
 };
@@ -114,9 +114,22 @@ var aiMovement = function () {
 var ballMovement = function() {
 	
 	
-	//basic movement in the x axis
+	//basic movement in the x and y axis
 	ball.x += ball.speedXAxis;
 	console.log(ball.x)
+
+	ball.y += ball.speedYAxis;
+	console.log(ball.y)
+
+	if ( ball.y > 1) {
+	ball.speedYAxis = -ball.speedYAxis
+	}
+
+	if (ball.y < canvas.height - 1) {
+	ball.speedYAxis = -ball.speedYAxis
+	}
+
+
 
 
 	//ball to ai game occurences
@@ -131,17 +144,24 @@ var ballMovement = function() {
 			//collision in y axis based on which part of the keeper is hit
 			var differenceY = ball.y - (aiKeeper.y + aiKeeper.height/2);
 			console.log('difference y:'+ differenceY);
-			// ball.speedYAxis = differenceY/3;
+			 ball.speedYAxis = differenceY * 0.20;
 		}
 
 	else {
 		// if not the player concedes and ball reset in center upon conceding
-		ball.speedXAxis = -ball.speedXAxis
+		ball.speedXAxis = -ball.speedXAxis 
 		ball.x = canvas.width/2;
 		ball.y = canvas.height/2;
+
+		//create a new variable/object to store the score
 		playerKeeper.score += 1
+
+		// crea a new div or any html element to change score
 		var playerScore = document.querySelector('#player')
 		playerScore.innerHTML = playerKeeper.score
+
+		//repeat the same for the ai
+
 		console.log("playerKeeperScore:" + playerKeeper.score)
 
 	}	
@@ -159,7 +179,7 @@ var ballMovement = function() {
 
 			//collision in y axis based on which part of the keeper is hit
 			var differenceY = ball.y - (playerKeeper.y + playerKeeper.height/2);
-			//ball.speedYAxis = differenceY/40;
+			 ball.speedYAxis = differenceY * 0.20;
 		}
 
 	else {
@@ -176,12 +196,6 @@ var ballMovement = function() {
 		}	
 	}
 
-	// bounces when ball hit the top of the canvas
-	ball.y += ball.speedYAxis;
-	console.log(ball.y)
-	if (ball.y === canvas.height || ball.y === 0) {
-	ball.speedYAxis = -ball.speedYAxis
-	}
 }
 
 
